@@ -147,26 +147,15 @@
     </nav>
 
     <div class="container">
-        <h2>Test Content</h2>
-        <p>This is a simple website created for testing purposes. It includes basic HTML elements and CSS styling.</p>
-        
-        <h3>Features:</h3>
-        <ul>
-            <li>Responsive design</li>
-            <li>Navigation menu</li>
-            <li>Main content area</li>
-            <li>Footer</li>
-            <li>CAPTCHA verification</li>
-        </ul>
-
         <div class="captcha-container">
-            <h3>Please Verify You're Human</h3>
+            <h2>CAPTCHA Verification</h2>
+            <p>Please enter the text shown in the image below:</p>
             <canvas id="captcha-canvas" width="200" height="70"></canvas>
             <div class="captcha-input">
                 <input type="text" id="captcha-input" placeholder="Enter the text you see above">
                 <button onclick="validateCaptcha()">Verify</button>
+                <button onclick="refreshCaptcha()" class="refresh-btn">↻ Refresh</button>
             </div>
-            <button onclick="generateCaptcha()">New CAPTCHA</button>
         </div>
     </div>
 
