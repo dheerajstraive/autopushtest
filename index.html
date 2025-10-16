@@ -147,6 +147,11 @@
             }
         }
 
+        function refreshCaptcha() {
+            generateCaptcha();
+            document.getElementById('captcha-input').value = '';
+        }
+
         // Generate CAPTCHA when page loads
         window.onload = generateCaptcha;
     </script>
