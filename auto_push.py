@@ -8,14 +8,22 @@ import os
 REPO_PATH = r"C:\Users\e413995\Documents\GenAICourse\autopushtest"
 COMMIT_MESSAGE = "Auto-update from local changes"
 
+IGNORE_PATHS = [
+    ".git",        # ignore git metadata
+    "__pycache__", # ignore Python cache
+    "*.pyc",       # ignore compiled files
+]
+
 class ChangeHandler(FileSystemEventHandler):
     def __init__(self, repo_path):
         self.repo = Repo(repo_path)
 
     def on_any_event(self, event):
-        # Ignore temporary files like .swp, .tmp, etc.
-        if event.src_path.endswith(('.swp', '.tmp', '~')):
-            return
+        # Check if the changed file is in ignore list
+        for pattern in IGNORE_PATHS:
+            if pattern in event.src_path:
+                return
+
         print(f"Change detected: {event.src_path}")
         self.repo.git.add(all=True)
         self.repo.index.commit(COMMIT_MESSAGE)
