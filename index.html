@@ -40,7 +40,100 @@
             bottom: 0;
             width: 100%;
         }
+        .captcha-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #captcha-canvas {
+            background-color: #f0f0f0;
+            border: 1px solid #999;
+            margin-bottom: 1rem;
+        }
+        .captcha-input {
+            margin: 1rem 0;
+        }
+        .captcha-input input {
+            padding: 0.5rem;
+            margin-right: 1rem;
+        }
+        .captcha-input button {
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .captcha-input button:hover {
+            background-color: #555;
+        }
     </style>
+    <script>
+        let captchaText = '';
+
+        function generateCaptcha() {
+            const canvas = document.getElementById('captcha-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear the canvas
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Generate random text
+            captchaText = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            // Add noise
+            for(let i = 0; i < 100; i++) {
+                ctx.fillStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.3)`;
+                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+            }
+
+            // Draw the text
+            ctx.font = '35px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
+            
+            // Add wavy effect
+            let x = canvas.width/2;
+            for(let i = 0; i < captchaText.length; i++) {
+                const char = captchaText.charAt(i);
+                const y = canvas.height/2 + Math.sin(i) * 10;
+                ctx.save();
+                ctx.translate(x - ((captchaText.length/2) - i) * 25, y);
+                ctx.rotate((Math.random() - 0.5) * 0.4);
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+            }
+
+            // Add lines
+            for(let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`;
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.stroke();
+            }
+        }
+
+        function validateCaptcha() {
+            const input = document.getElementById('captcha-input').value.toUpperCase();
+            if(input === captchaText) {
+                alert('CAPTCHA verified successfully!');
+                document.getElementById('captcha-input').value = '';
+                generateCaptcha();
+            } else {
+                alert('CAPTCHA verification failed. Please try again.');
+                document.getElementById('captcha-input').value = '';
+                generateCaptcha();
+            }
+        }
+
+        // Generate CAPTCHA when page loads
+        window.onload = generateCaptcha;
+    </script>
 </head>
 <body>
     <header>
@@ -63,7 +156,18 @@
             <li>Navigation menu</li>
             <li>Main content area</li>
             <li>Footer</li>
+            <li>CAPTCHA verification</li>
         </ul>
+
+        <div class="captcha-container">
+            <h3>Please Verify You're Human</h3>
+            <canvas id="captcha-canvas" width="200" height="70"></canvas>
+            <div class="captcha-input">
+                <input type="text" id="captcha-input" placeholder="Enter the text you see above">
+                <button onclick="validateCaptcha()">Verify</button>
+            </div>
+            <button onclick="generateCaptcha()">New CAPTCHA</button>
+        </div>
     </div>
 
     <footer>
